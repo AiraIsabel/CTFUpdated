@@ -115,8 +115,9 @@
     <div class="message" id="message2"></div>
   </div>
 </div>
+  
 <!-- Level 3 -->
-<div class="container show" id="level3">
+<div class="container" id="level3">
   <h1>🔒 Crypto CTF - Level 3</h1>
   <p><strong>Scenario:</strong> After cracking the previous levels, you’ve discovered a hidden flag stored in an encrypted message using RSA encryption. The ciphertext has been locked away with a public key. Your task is to decrypt it and reveal the flag!</p>
 
@@ -125,26 +126,6 @@
   
   <p><strong>Decryption Formula:</strong></p>
   <p><code>m = c^d mod n</code></p>
-  <p>Where:</p>
-  <ul>
-    <li><strong>c</strong> is the ciphertext number</li>
-    <li><strong>d</strong> is the private key (which you need to calculate)</li>
-    <li><strong>n</strong> is the modulus from the public key</li>
-  </ul>
-
-  <p><strong>Steps:</strong></p>
-  <ul>
-    <li>1. Factor <code>n = 391</code> to find <code>p</code> and <code>q</code>.</li>
-    <li>2. Calculate <code>φ(n) = (p - 1) * (q - 1)</code>.</li>
-    <li>3. Find the modular inverse of <code>e = 3</code> modulo <code>φ(n)</code> to get <code>d</code>.</li>
-    <li>4. Decrypt each ciphertext using <code>m = c^d mod n</code>.</li>
-    <li>5. Convert <code>m</code> to ASCII to reveal the flag!</li>
-  </ul>
-
-  <div class="ciphertext">
-    <strong>Ciphertext:</strong><br>
-    <code>[132, 69, 199, 132, 244, 359, 94, 187, 80, 141, 101, 80, 148, 94, 336, 313, 187, 313]</code>
-  </div>
 
   <div class="hints">
     <button onclick="showHint('hint3-1')">Show Hint 1</button>
