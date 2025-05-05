@@ -115,6 +115,58 @@
     <div class="message" id="message2"></div>
   </div>
 </div>
+<!-- Level 3 -->
+<div class="container show" id="level3">
+  <h1>🔒 Crypto CTF - Level 3</h1>
+  <p><strong>Scenario:</strong> After cracking the previous levels, you’ve discovered a hidden flag stored in an encrypted message using RSA encryption. The ciphertext has been locked away with a public key. Your task is to decrypt it and reveal the flag!</p>
+
+  <p><strong>RSA Public Key:</strong></p>
+  <code>n = 391, e = 3</code>
+  
+  <p><strong>Decryption Formula:</strong></p>
+  <p><code>m = c^d mod n</code></p>
+  <p>Where:</p>
+  <ul>
+    <li><strong>c</strong> is the ciphertext number</li>
+    <li><strong>d</strong> is the private key (which you need to calculate)</li>
+    <li><strong>n</strong> is the modulus from the public key</li>
+  </ul>
+
+  <p><strong>Steps:</strong></p>
+  <ul>
+    <li>1. Factor <code>n = 391</code> to find <code>p</code> and <code>q</code>.</li>
+    <li>2. Calculate <code>φ(n) = (p - 1) * (q - 1)</code>.</li>
+    <li>3. Find the modular inverse of <code>e = 3</code> modulo <code>φ(n)</code> to get <code>d</code>.</li>
+    <li>4. Decrypt each ciphertext using <code>m = c^d mod n</code>.</li>
+    <li>5. Convert <code>m</code> to ASCII to reveal the flag!</li>
+  </ul>
+
+  <div class="ciphertext">
+    <strong>Ciphertext:</strong><br>
+    <code>[132, 69, 199, 132, 244, 359, 94, 187, 80, 141, 101, 80, 148, 94, 336, 313, 187, 313]</code>
+  </div>
+
+  <div class="hints">
+    <button onclick="showHint('hint3-1')">Show Hint 1</button>
+    <p id="hint3-1" style="display: none;">🧠 Hint 1: Factor <code>n = 391</code> to find two prime numbers.</p><br>
+    <button onclick="showHint('hint3-2')">Show Hint 2</button>
+    <p id="hint3-2" style="display: none;">🧠 Hint 2: Calculate <code>φ(n) = (p - 1) * (q - 1)</code>.</p><br>
+    <button onclick="showHint('hint3-3')">Show Hint 3</button>
+    <p id="hint3-3" style="display: none;">🧠 Hint 3: Use modular inverse to find <code>d</code>.</p><br>
+    <button onclick="showHint('hint3-4')">Show Hint 4</button>
+    <p id="hint3-4" style="display: none;">🧠 Hint 4: Once decrypted, convert the numbers to ASCII to get the flag.</p>
+  </div>
+
+  <div>
+    <button onclick="downloadCiphertext()">Download Ciphertext</button>
+  </div>
+
+  <div id="flagForm3">
+    <input type="text" id="flagInput3" placeholder="Enter the decrypted flag..." required>
+    <button id="submitBtn3">Submit</button>
+    <div class="message" id="message3"></div>
+  </div>
+</div>
 
 <script>
   // Handle Level 1 Submission
@@ -150,30 +202,38 @@
     }
   });
     // Handle Level 2 Submission
-  document.getElementById("submitBtn2").addEventListener("click", async function (e) {
-    e.preventDefault();
-  
-    const flag = document.getElementById("flagInput2").value;
-  
-    const response = await fetch("/.netlify/functions/checkFlag", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ flag, level: "2" })
-    });
-  
-    const result = await response.json();
-    const messageDiv = document.getElementById("message2");
-  
-    if (result.correct) {
-      messageDiv.textContent = "✅ Correct! You solved Level 2!";
-      messageDiv.style.color = "#4caf50";
-  
-      // TODO: Add transition to Level 3 here if needed
-    } else {
-      messageDiv.textContent = "❌ Incorrect, try again.";
-      messageDiv.style.color = "#f44336";
-    }
+document.getElementById("submitBtn2").addEventListener("click", async function (e) {
+  e.preventDefault();
+
+  const flag = document.getElementById("flagInput2").value;
+
+  const response = await fetch("/.netlify/functions/checkFlag", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ flag, level: "2" })
   });
+
+  const result = await response.json();
+  const messageDiv = document.getElementById("message2");
+
+  if (result.correct) {
+    messageDiv.textContent = "✅ Correct! You solved Level 2!";
+    messageDiv.style.color = "#4caf50";
+
+    // Transition to Level 3
+    setTimeout(() => {
+      document.getElementById("level2").classList.remove("show");
+      document.getElementById("level2").style.display = "none";
+
+      const level3 = document.getElementById("level3");
+      level3.classList.add("show");
+      level3.style.display = "block";
+    }, 1000);
+  } else {
+    messageDiv.textContent = "❌ Incorrect, try again.";
+    messageDiv.style.color = "#f44336";
+  }
+});
 
   function showHint(id) {
     const hint = document.getElementById(id);
