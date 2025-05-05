@@ -1,50 +1,35 @@
-const crypto = require("crypto");
+const crypto = require('crypto');
 
-exports.handler = async (event) => {
-  try {
-    const { flag, level } = JSON.parse(event.body || "{}");
+const correctHash = 'ec4fbc87fabefbf59cc72492b0f273e7889e7c137fc5e3c406ae27515845ddc5';
+const salt = 'salt123';
 
-    if (!flag || !level) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ correct: false, error: "Missing flag or level." })
-      };
-    }
+exports.handler = async (event, context) => {
+if (event.httpMethod !== 'POST') {
+return {
+statusCode: 405,
+body: JSON.stringify({ error: 'Method Not Allowed' }),
+};
+}
 
-    let correct = false;
+try {
+const { flag } = JSON.parse(event.body);
 
-    if (parseInt(level) === 1) {
-      // Level 1: salted SHA-256 hash
-      const password = flag;
-      const salt = "C7F82";
-      const hash = crypto.createHash("sha256").update(password + salt).digest("hex");
+```
+const input = flag + salt;
+const hash = crypto.createHash('sha256').update(input).digest('hex');
 
-      const expectedHash = "e95a48fa2e7c364f3dc2bdc13c816f05bbd5b8ec5358a7b04ed2ed7aa3673174"; // correct hash of "hamSandwich14325C7F82"
+const correct = (hash === correctHash);
 
-      correct = hash === expectedHash;
-    }
+return {
+  statusCode: 200,
+  body: JSON.stringify({ correct }),
+};
+```
 
-    if (parseInt(level) === 2) {
-      // Level 2: Double Base64 encoded string with noise
-      const expectedDecodedMessage = "this1sCryptography";
-      correct = flag.trim() === expectedDecodedMessage;
-    }
-
-    if (parseInt(level) === 3) {
-      // Will be added later
-      correct = false;
-    }
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ correct })
-    };
-
-  } catch (error) {
-    console.error("Error in checkFlag:", error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ correct: false, error: "Server error" })
-    };
-  }
+} catch (err) {
+return {
+statusCode: 500,
+body: JSON.stringify({ error: 'Server Error' }),
+};
+}
 };
