@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -68,6 +67,7 @@
 </head>
 <body>
 
+<!-- Level 1 -->
 <div class="container show" id="level1">
   <h1>🔒 Crypto CTF - Level 1</h1>
   <p><strong>Scenario:</strong> A hacker has encrypted a password used to unlock a digital vault using SHA-256 with a salt. Your mission is to reverse-engineer what the original password was, given only the final hash.</p>
@@ -92,6 +92,7 @@
   </form>
 </div>
 
+<!-- Level 2 -->
 <div class="container" id="level2" style="display: none;">
   <h1>🔒 Crypto CTF - Level 2</h1>
   <p><strong>Scenario:</strong> After decrypting the vault’s hash, you find a second encoded message with a label: <code>base64::b3JpZ2luYWxCYXNlNjRTdHJpbmc=</code>. But it’s not so simple—there’s a trick to it.</p>
@@ -102,7 +103,7 @@
   <div class="hints">
     <button onclick="showHint('hint2-1')">Show Hint 1</button>
     <p id="hint2-1" style="display: none;">🧠 Hint 1: Remove the <code>base64::</code> prefix from the decoded string before the second decode.</p><br>
-    <button onclick="showHint('hint2-2')">Show Hint 1</button>
+    <button onclick="showHint('hint2-2')">Show Hint 2</button>
     <p id="hint2-2" style="display: none;">🧠 Hint 2: You’ll need to decode twice using base64.</p><br>
   </div>
 
@@ -113,7 +114,6 @@
   </form>
 </div>
 
-
 <script>
   document.getElementById("flagForm1").addEventListener("submit", async function(e) {
     e.preventDefault();
@@ -122,7 +122,7 @@
     const response = await fetch("/.netlify/functions/checkFlag", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ flag, level: "1" }) 
+      body: JSON.stringify({ flag, level: "1" }) // Specify level 1 in the request
     });
 
     const result = await response.json();
@@ -132,10 +132,10 @@
       messageDiv.textContent = "✅ Correct! Well done.";
       messageDiv.style.color = "#4caf50";
 
-      // Show Level 2 after 1 second delay
+      // Show Level 2
       setTimeout(() => {
-        document.getElementById("level1").style.display = "none";  // Hide Level 1
-        document.getElementById("level2").style.display = "block"; // Show Level 2
+        document.getElementById("level1").style.display = "none";
+        document.getElementById("level2").style.display = "block";
       }, 1000);
 
     } else {
