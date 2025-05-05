@@ -1,33 +1,35 @@
 const crypto = require('crypto');
 
-const correctHash = 'ec4fbc87fabefbf59cc72492b0f273e7889e7c137fc5e3c406ae27515845ddc5';
-const salt = 'salt123';
+const level1Hash = 'ec4fbc87fabefbf59cc72492b0f273e7889e7c137fc5e3c406ae27515845ddc5';
+const level1Salt = 'salt123';
 
-exports.handler = async (event, context) => {
-if (event.httpMethod !== 'POST') {
-return {
-statusCode: 405,
-body: JSON.stringify({ error: 'Method Not Allowed' }),
-};
-}
+const level2Hash = '574d7ef857e2b7ee959f4dc28569151490c767c3356e3c0ea6235c2088b34c7d';
+const level2Salt = 'level2';
 
-try {
-const { flag } = JSON.parse(event.body);
+exports.handler = async (event) => {
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
+  }
 
-const input = flag + salt;
-const hash = crypto.createHash('sha256').update(input).digest('hex');
+  try {
+    const { flag, level } = JSON.parse(event.body);
 
-const correct = (hash === correctHash);
+    if (level === '1') {
+      const input = flag + level1Salt;
+      const hash = crypto.createHash('sha256').update(input).digest('hex');
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ correct: hash === level1Hash }),
+      };
+    }
 
-return {
-  statusCode: 200,
-  body: JSON.stringify({ correct }),
-};
+    if (level === '2') {
+      const input = flag + level2Salt;
+      const hash = crypto.createHash('sha256').update(input).digest('hex');
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ correct: hash === level2Hash }),
+      };
+    }
 
-} catch (err) {
-return {
-statusCode: 500,
-body: JSON.stringify({ error: 'Server Error' }),
-};
-}
-};
+    return { status
