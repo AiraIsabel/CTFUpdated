@@ -14,7 +14,7 @@ body: JSON.stringify({ error: 'Method Not Allowed' }),
 try {
 const { flag } = JSON.parse(event.body);
 
-```
+
 const input = flag + salt;
 const hash = crypto.createHash('sha256').update(input).digest('hex');
 
@@ -24,7 +24,7 @@ return {
   statusCode: 200,
   body: JSON.stringify({ correct }),
 };
-```
+
 
 } catch (err) {
 return {
@@ -33,3 +33,4 @@ body: JSON.stringify({ error: 'Server Error' }),
 };
 }
 };
+
