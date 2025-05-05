@@ -132,10 +132,10 @@
       messageDiv.textContent = "✅ Correct! Well done.";
       messageDiv.style.color = "#4caf50";
 
-      // Show Level 2
+      // Show Level 2 after 1 second delay
       setTimeout(() => {
-        document.getElementById("level1").style.display = "none";
-        document.getElementById("level2").style.display = "block";
+        document.getElementById("level1").style.display = "none";  // Hide Level 1
+        document.getElementById("level2").style.display = "block"; // Show Level 2
       }, 1000);
 
     } else {
@@ -150,6 +150,5 @@
   }
 </script>
 
-  
 </body>
 </html>
