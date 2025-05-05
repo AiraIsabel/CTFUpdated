@@ -149,6 +149,31 @@
       messageDiv.style.color = "#f44336";
     }
   });
+    // Handle Level 2 Submission
+  document.getElementById("submitBtn2").addEventListener("click", async function (e) {
+    e.preventDefault();
+  
+    const flag = document.getElementById("flagInput2").value;
+  
+    const response = await fetch("/.netlify/functions/checkFlag", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ flag, level: "2" })
+    });
+  
+    const result = await response.json();
+    const messageDiv = document.getElementById("message2");
+  
+    if (result.correct) {
+      messageDiv.textContent = "✅ Correct! You solved Level 2!";
+      messageDiv.style.color = "#4caf50";
+  
+      // TODO: Add transition to Level 3 here if needed
+    } else {
+      messageDiv.textContent = "❌ Incorrect, try again.";
+      messageDiv.style.color = "#f44336";
+    }
+  });
 
   function showHint(id) {
     const hint = document.getElementById(id);
