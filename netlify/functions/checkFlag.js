@@ -1,33 +1,64 @@
 const crypto = require('crypto');
 
-const correctHash = 'ec4fbc87fabefbf59cc72492b0f273e7889e7c137fc5e3c406ae27515845ddc5';
-const salt = 'salt123';
+// Level 1 - Salted SHA-256 Hash
+const level1Hash = 'ec4fbc87fabefbf59cc72492b0f273e7889e7c137fc5e3c406ae27515845ddc5';
+const level1Salt = 'salt123';
 
-exports.handler = async (event, context) => {
-if (event.httpMethod !== 'POST') {
-return {
-statusCode: 405,
-body: JSON.stringify({ error: 'Method Not Allowed' }),
-};
-}
+// Level 2 - Salted SHA-256 Hash
+const level2Hash = '574d7ef857e2b7ee959f4dc28569151490c767c3356e3c0ea6235c2088b34c7d';
+const level2Salt = 'level2';
 
-try {
-const { flag } = JSON.parse(event.body);
+// Level 3 - RSA Encryption
+const rsaPrivateKey = `-----BEGIN RSA PRIVATE KEY-----
+MIICXAIBAAKBgQCHkpzZj7xMIt9Z7UpmctMjq/fZp6gkq45mHnGBJ+9dYm72xeHe
+...
+<your private key here>
+-----END RSA PRIVATE KEY-----`;
 
-const input = flag + salt;
-const hash = crypto.createHash('sha256').update(input).digest('hex');
+exports.handler = async (event) => {
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
+  }
 
-const correct = (hash === correctHash);
+  try {
+    const { flag, level } = JSON.parse(event.body);
 
-return {
-  statusCode: 200,
-  body: JSON.stringify({ correct }),
-};
+    if (level === '1') {
+      const input = flag + level1Salt;
+      const hash = crypto.createHash('sha256').update(input).digest('hex');
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ correct: hash === level1Hash }),
+      };
+    }
 
-} catch (err) {
-return {
-statusCode: 500,
-body: JSON.stringify({ error: 'Server Error' }),
-};
-}
+    if (level === '2') {
+      const input = flag + level2Salt;
+      const hash = crypto.createHash('sha256').update(input).digest('hex');
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ correct: hash === level2Hash }),
+      };
+    }
+
+    if (level === '3') {
+      // Decrypt the flag using the RSA private key
+      const buffer = Buffer.from(flag, 'base64');
+      const decrypted = crypto.privateDecrypt(rsaPrivateKey, buffer);
+      const decryptedFlag = decrypted.toString('utf8');
+
+      // Check if the decrypted flag matches the expected flag
+      const expectedFlag = 'CTFCrypto_complete'; // The flag you set in Level 3
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ correct: decryptedFlag === expectedFlag }),
+      };
+    }
+
+    return { statusCode: 400, body: JSON.stringify({ error: 'Invalid level' }) };
+
+  } catch (err) {
+    console.error(err); // Log error to the server logs for debugging
+    return { statusCode: 500, body: JSON.stringify({ error: 'Server Error' }) };
+  }
 };

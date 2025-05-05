@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -27,8 +26,10 @@
       transition: all 0.5s ease;
       opacity: 0;
       transform: scale(0.95);
+      display: none;
     }
     .show {
+      display: block;
       opacity: 1;
       transform: scale(1);
     }
@@ -68,6 +69,7 @@
 </head>
 <body>
 
+<!-- Level 1 -->
 <div class="container show" id="level1">
   <h1>🔒 Crypto CTF - Level 1</h1>
   <p><strong>Scenario:</strong> A hacker has encrypted a password used to unlock a digital vault using SHA-256 with a salt. Your mission is to reverse-engineer what the original password was, given only the final hash.</p>
@@ -85,14 +87,15 @@
     <p id="hint1-3" style="display: none;">🛠 Hint 3: You can verify your result using CyberChef, a terminal command, or Google Colab.</p>
   </div>
 
-  <form id="flagForm1">
+  <div id="flagForm1">
     <input type="text" id="flagInput1" placeholder="Enter the original password..." required>
-    <button type="submit">Submit</button>
+    <button id="submitBtn1">Submit</button>
     <div class="message" id="message1"></div>
-  </form>
+  </div>
 </div>
 
-<div class="container" id="level2" style="display: none;">
+<!-- Level 2 -->
+<div class="container" id="level2">
   <h1>🔒 Crypto CTF - Level 2</h1>
   <p><strong>Scenario:</strong> After decrypting the vault’s hash, you find a second encoded message with a label: <code>base64::b3JpZ2luYWxCYXNlNjRTdHJpbmc=</code>. But it’s not so simple—there’s a trick to it.</p>
 
@@ -102,27 +105,61 @@
   <div class="hints">
     <button onclick="showHint('hint2-1')">Show Hint 1</button>
     <p id="hint2-1" style="display: none;">🧠 Hint 1: Remove the <code>base64::</code> prefix from the decoded string before the second decode.</p><br>
-    <button onclick="showHint('hint2-2')">Show Hint 1</button>
+    <button onclick="showHint('hint2-2')">Show Hint 2</button>
     <p id="hint2-2" style="display: none;">🧠 Hint 2: You’ll need to decode twice using base64.</p><br>
   </div>
 
-  <form id="flagForm2">
+  <div id="flagForm2">
     <input type="text" id="flagInput2" placeholder="Enter the flag..." required>
-    <button type="submit">Submit</button>
+    <button id="submitBtn2">Submit</button>
     <div class="message" id="message2"></div>
-  </form>
+  </div>
+</div>
+  
+<!-- Level 3 -->
+<div class="container" id="level3">
+  <h1>🔒 Crypto CTF - Level 3</h1>
+  <p><strong>Scenario:</strong> After cracking the previous levels, you’ve discovered a hidden flag stored in an encrypted message using RSA encryption. The ciphertext has been locked away with a public key. Your task is to decrypt it and reveal the flag!</p>
+
+  <p><strong>RSA Public Key:</strong></p>
+  <code>n = 391, e = 3</code>
+  
+  <p><strong>Decryption Formula:</strong></p>
+  <p><code>m = c^d mod n</code></p>
+
+  <div class="hints">
+    <button onclick="showHint('hint3-1')">Show Hint 1</button>
+    <p id="hint3-1" style="display: none;">🧠 Hint 1: Factor <code>n = 391</code> to find two prime numbers.</p><br>
+    <button onclick="showHint('hint3-2')">Show Hint 2</button>
+    <p id="hint3-2" style="display: none;">🧠 Hint 2: Calculate <code>φ(n) = (p - 1) * (q - 1)</code>.</p><br>
+    <button onclick="showHint('hint3-3')">Show Hint 3</button>
+    <p id="hint3-3" style="display: none;">🧠 Hint 3: Use modular inverse to find <code>d</code>.</p><br>
+    <button onclick="showHint('hint3-4')">Show Hint 4</button>
+    <p id="hint3-4" style="display: none;">🧠 Hint 4: Once decrypted, convert the numbers to ASCII to get the flag.</p>
+  </div>
+
+  <div>
+    <button onclick="downloadCiphertext()">Download Ciphertext</button>
+  </div>
+
+  <div id="flagForm3">
+    <input type="text" id="flagInput3" placeholder="Enter the decrypted flag..." required>
+    <button id="submitBtn3">Submit</button>
+    <div class="message" id="message3"></div>
+  </div>
 </div>
 
-
 <script>
-  document.getElementById("flagForm1").addEventListener("submit", async function(e) {
+  // Handle Level 1 Submission
+  document.getElementById("submitBtn1").addEventListener("click", async function (e) {
     e.preventDefault();
+
     const flag = document.getElementById("flagInput1").value;
 
     const response = await fetch("/.netlify/functions/checkFlag", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ flag, level: "1" }) 
+      body: JSON.stringify({ flag, level: "1" })
     });
 
     const result = await response.json();
@@ -132,14 +169,74 @@
       messageDiv.textContent = "✅ Correct! Well done.";
       messageDiv.style.color = "#4caf50";
 
-      // Show Level 2
       setTimeout(() => {
+        document.getElementById("level1").classList.remove("show");
         document.getElementById("level1").style.display = "none";
-        document.getElementById("level2").style.display = "block";
-      }, 1000);
 
+        const level2 = document.getElementById("level2");
+        level2.classList.add("show");
+        level2.style.display = "block";
+      }, 1000);
     } else {
       messageDiv.textContent = "❌ Incorrect, try again.";
+      messageDiv.style.color = "#f44336";
+    }
+  });
+
+  // Handle Level 2 Submission
+  document.getElementById("submitBtn2").addEventListener("click", async function (e) {
+    e.preventDefault();
+
+    const flag = document.getElementById("flagInput2").value;
+
+    const response = await fetch("/.netlify/functions/checkFlag", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ flag, level: "2" })
+    });
+
+    const result = await response.json();
+    const messageDiv = document.getElementById("message2");
+
+    if (result.correct) {
+      messageDiv.textContent = "✅ Correct! You solved Level 2!";
+      messageDiv.style.color = "#4caf50";
+
+      // Transition to Level 3
+      setTimeout(() => {
+        document.getElementById("level2").classList.remove("show");
+        document.getElementById("level2").style.display = "none";
+
+        const level3 = document.getElementById("level3");
+        level3.classList.add("show");
+        level3.style.display = "block";
+      }, 1000);
+    } else {
+      messageDiv.textContent = "❌ Incorrect, try again.";
+      messageDiv.style.color = "#f44336";
+    }
+  });
+
+  // Handle Level 3 Submission
+  document.getElementById("submitBtn3").addEventListener("click", async function (e) {
+    e.preventDefault();
+
+    const flag = document.getElementById("flagInput3").value;
+
+    const response = await fetch("/.netlify/functions/checkFlag", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ flag, level: "3" })
+    });
+
+    const result = await response.json();
+    const messageDiv = document.getElementById("message3");
+
+    if (result.correct) {
+      messageDiv.textContent = "✅ Flag found! Congratulations, you've completed the challenge!";
+      messageDiv.style.color = "#4caf50";
+    } else {
+      messageDiv.textContent = "❌ Incorrect flag. Try again.";
       messageDiv.style.color = "#f44336";
     }
   });
@@ -148,8 +245,19 @@
     const hint = document.getElementById(id);
     if (hint) hint.style.display = 'block';
   }
+
+  // Function to download ciphertext for Level 3
+  function downloadCiphertext() {
+    const ciphertext = "ciphertext_here"; // Put your encrypted message or file content here
+    const blob = new Blob([ciphertext], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "ciphertext.txt";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 </script>
 
-  
 </body>
 </html>
