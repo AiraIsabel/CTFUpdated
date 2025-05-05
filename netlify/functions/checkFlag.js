@@ -42,11 +42,6 @@ exports.handler = async (event) => {
     }
 
     if (level === '3') {
-      // Decrypt the flag using the RSA private key
-      const buffer = Buffer.from(flag, 'base64');
-      const decrypted = crypto.privateDecrypt(rsaPrivateKey, buffer);
-      const decryptedFlag = decrypted.toString('utf8');
-
       // Check if the decrypted flag matches the expected flag
       const expectedFlag = 'CTFCrypto_complete'; // The flag you set in Level 3
       return {
