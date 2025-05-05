@@ -26,8 +26,10 @@
       transition: all 0.5s ease;
       opacity: 0;
       transform: scale(0.95);
+      display: none;
     }
     .show {
+      display: block;
       opacity: 1;
       transform: scale(1);
     }
@@ -85,15 +87,15 @@
     <p id="hint1-3" style="display: none;">🛠 Hint 3: You can verify your result using CyberChef, a terminal command, or Google Colab.</p>
   </div>
 
-  <form id="flagForm1">
+  <div id="flagForm1">
     <input type="text" id="flagInput1" placeholder="Enter the original password..." required>
-    <button type="submit">Submit</button>
+    <button id="submitBtn1">Submit</button>
     <div class="message" id="message1"></div>
-  </form>
+  </div>
 </div>
 
 <!-- Level 2 -->
-<div class="container" id="level2" style="display: none;">
+<div class="container" id="level2">
   <h1>🔒 Crypto CTF - Level 2</h1>
   <p><strong>Scenario:</strong> After decrypting the vault’s hash, you find a second encoded message with a label: <code>base64::b3JpZ2luYWxCYXNlNjRTdHJpbmc=</code>. But it’s not so simple—there’s a trick to it.</p>
 
@@ -107,22 +109,24 @@
     <p id="hint2-2" style="display: none;">🧠 Hint 2: You’ll need to decode twice using base64.</p><br>
   </div>
 
-  <form id="flagForm2">
+  <div id="flagForm2">
     <input type="text" id="flagInput2" placeholder="Enter the flag..." required>
-    <button type="submit">Submit</button>
+    <button id="submitBtn2">Submit</button>
     <div class="message" id="message2"></div>
-  </form>
+  </div>
 </div>
 
 <script>
-  document.getElementById("flagForm1").addEventListener("submit", async function(e) {
+  // Handle Level 1 Submission
+  document.getElementById("submitBtn1").addEventListener("click", async function (e) {
     e.preventDefault();
+
     const flag = document.getElementById("flagInput1").value;
 
     const response = await fetch("/.netlify/functions/checkFlag", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ flag, level: "1" }) // Specify level 1 in the request
+      body: JSON.stringify({ flag, level: "1" })
     });
 
     const result = await response.json();
@@ -132,12 +136,14 @@
       messageDiv.textContent = "✅ Correct! Well done.";
       messageDiv.style.color = "#4caf50";
 
-      // Show Level 2
       setTimeout(() => {
+        document.getElementById("level1").classList.remove("show");
         document.getElementById("level1").style.display = "none";
-        document.getElementById("level2").style.display = "block";
-      }, 1000);
 
+        const level2 = document.getElementById("level2");
+        level2.classList.add("show");
+        level2.style.display = "block";
+      }, 1000);
     } else {
       messageDiv.textContent = "❌ Incorrect, try again.";
       messageDiv.style.color = "#f44336";
