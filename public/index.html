@@ -75,10 +75,14 @@
   <code>ec4fbc87fabefbf59cc72492b0f273e7889e7c137fc5e3c406ae27515845ddc5</code>
 
   <div class="hints">
-    <p>🧂 Salt used: <code>salt123</code></p>
-    <p>🧠 Hint 1: The password is a common food item followed by random numbers.</p>
-    <p>🧠 Hint 2: Concatenate the password and salt before hashing (e.g. password + salt).</p>
-    <p>🛠 Hint 3: You can verify your result using CyberChef, a terminal command, or Google Colab.</p>
+    <button onclick="showHint('hint1-1')">Show Hint 1</button>
+    <p id="hint1-1" style="display: none;">🧠 Hint 1: The password is a common food item followed by random numbers.</p>
+    
+    <button onclick="showHint('hint1-2')">Show Hint 1</button>
+    <p id="hint1-2" style="display: none;">💡 Hint 2: Concatenate the password and salt before hashing (e.g. password + salt).</p>
+    
+    <button onclick="showHint('hint1-3')">Show Hint 1</button>
+    <p id="hint1-3" style="display: none;">🛠 Hint 3: You can verify your result using CyberChef, a terminal command, or Google Colab.</p>
   </div>
 
   <form id="flagForm1">
@@ -88,28 +92,89 @@
   </form>
 </div>
 
-<script>
-  document.getElementById("flagForm1").addEventListener("submit", async function(e) {
-    e.preventDefault();
-    const flag = document.getElementById("flagInput1").value;
+<div class="container" id="level2" style="display: none;">
+    <h1>🕵️ Crypto CTF - Level 2</h1>
+    <p><strong>Scenario:</strong> After recovering the original password, you intercept a suspicious message. It looks encoded — and your goal is to find out what it says.</p>
+  
+    <p><strong>Encoded Message:</strong></p>
+    <code>U0dWc2JHOGdWMjl5YkdRaA==ZnJhbWVzS2V5</code>
+  
+    <div class="hints">
+        <button onclick="showHint('hint2-1')">Show Hint 1</button>
+        <p id="hint2-1" style="display: none;">🔍 Hint 1: It seems to be encoded in Base64 — twice. But something is off.</p>
+      
+        <button onclick="showHint('hint2-2')">Show Hint 2</button>
+        <p id="hint2-2" style="display: none;">💡 Hint 2: There’s noise in the middle — separate and decode in order.</p>
+      
+        <button onclick="showHint('hint2-3')">Show Hint 3</button>
+        <p id="hint2-3" style="display: none;">🧠 Hint 3: You’ll need to remove the noise and decode both halves.</p>
+      </div>
+      
+  
+    <form id="flagForm2">
+      <input type="text" id="flagInput2" placeholder="Enter the decoded secret..." required>
+      <button type="submit">Submit</button>
+      <div class="message" id="message2"></div>
+    </form>
+  </div>
+  
 
-    const response = await fetch("/.netlify/functions/checkFlag", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ flag })
+  <script>
+    document.getElementById("flagForm1").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const flag = document.getElementById("flagInput1").value;
+  
+      const response = await fetch("/.netlify/functions/checkFlag", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ flag, level: 1 }) 
+      });
+  
+      const result = await response.json();
+      const messageDiv = document.getElementById("message1");
+      if (result.correct) {
+        messageDiv.textContent = "✅ Correct! Proceeding to Level 2...";
+        messageDiv.style.color = "#4caf50";
+        setTimeout(() => {
+          document.getElementById("level1").style.display = "none";
+          document.getElementById("level2").style.display = "block";
+        }, 1500);
+      } else {
+        messageDiv.textContent = "❌ Incorrect, try again.";
+        messageDiv.style.color = "#f44336";
+      }
     });
-
-    const result = await response.json();
-    const messageDiv = document.getElementById("message1");
-    if (result.correct) {
-      messageDiv.textContent = "✅ Correct! Well done.";
-      messageDiv.style.color = "#4caf50";
-    } else {
-      messageDiv.textContent = "❌ Incorrect, try again.";
-      messageDiv.style.color = "#f44336";
+  
+    document.getElementById("flagForm2").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const flag = document.getElementById("flagInput2").value;
+  
+      const response = await fetch("/.netlify/functions/checkFlag", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ flag, level: 2 })
+      });
+  
+      const result = await response.json();
+      const messageDiv = document.getElementById("message2");
+      if (result.correct) {
+        messageDiv.textContent = "✅ Correct! Level 3 unlocked!";
+        messageDiv.style.color = "#4caf50";
+        setTimeout(() => {
+          document.getElementById("level2").style.display = "none";
+          document.getElementById("level3").style.display = "block";
+        }, 1500);
+      } else {
+        messageDiv.textContent = "❌ Nope! Try again.";
+        messageDiv.style.color = "#f44336";
+      }
+    });
+  
+    function showHint(id) {
+      const hint = document.getElementById(id);
+      if (hint) hint.style.display = 'block';
     }
-  });
-</script>
-
+  </script>
+  
 </body>
 </html>
