@@ -97,14 +97,14 @@
 <!-- Level 2 -->
 <div class="container" id="level2">
   <h1>🔒 Crypto CTF - Level 2</h1>
-  <p><strong>Scenario:</strong> After decrypting the vault’s hash, you find a second encoded message with a label: <code>base64::b3JpZ2luYWxCYXNlNjRTdHJpbmc=</code>. But it’s not so simple—there’s a trick to it.</p>
+  <p><strong>Scenario:</strong> After decrypting the vault’s hash, you find a second encoded message. But it’s not so simple—there’s a trick to it.</p>
 
   <p>🔐 <strong>Encrypted String:</strong></p>
-  <code>YmFzZTY0OjpiM0pwWjJsdUxtTnZiUzkzYjJjdVkyOXRJQT09</code>
+  <code>YmFzZTY0OjpkR2hwY3pGelEzSjVjSFJ2WjNKaGNHaDU=</code>
 
   <div class="hints">
     <button onclick="showHint('hint2-1')">Show Hint 1</button><br>
-    <p id="hint2-1" style="display: none;">🧠 Hint 1: Remove the <code>base64::</code> prefix from the decoded string before the second decode.</p>
+    <p id="hint2-1" style="display: none;">🧠 Hint 1: Ypu have to remove something from the decoded string before the second decode.</p>
     <button onclick="showHint('hint2-2')">Show Hint 2</button><br>
     <p id="hint2-2" style="display: none;">🧠 Hint 2: You’ll need to decode twice using base64.</p>
   </div>
