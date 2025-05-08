@@ -97,7 +97,7 @@
 <!-- Level 2 -->
 <div class="container" id="level2">
   <h1>🔒 Crypto CTF - Level 2</h1>
-  <p><strong>Scenario:</strong> After decrypting the vault’s hash, you find a second encoded message. But it’s not so simple—there’s a trick to it.</p>
+  <p><strong>Scenario:</strong> After decrypting the vault's hash, you find a second encoded message. But it's not so simple—there's a trick to it.</p>
 
   <p>🔐 <strong>Encrypted String:</strong></p>
   <code>YmFzZTY0OjpkR2hwY3pGelEzSjVjSFJ2WjNKaGNHaDU=</code>
@@ -106,7 +106,7 @@
     <button onclick="showHint('hint2-1')">Show Hint 1</button><br>
     <p id="hint2-1" style="display: none;">🧠 Hint 1: Ypu have to remove something from the decoded string before the second decode.</p>
     <button onclick="showHint('hint2-2')">Show Hint 2</button><br>
-    <p id="hint2-2" style="display: none;">🧠 Hint 2: You’ll need to decode twice using base64.</p>
+    <p id="hint2-2" style="display: none;">🧠 Hint 2: You'll need to decode twice using base64.</p>
   </div>
 
   <div id="flagForm2">
@@ -119,7 +119,7 @@
 <!-- Level 3 -->
 <div class="container" id="level3">
   <h1>🔒 Crypto CTF - Level 3</h1>
-  <p><strong>Scenario:</strong> After cracking the previous levels, you’ve discovered a hidden flag stored in an encrypted message using RSA encryption. The ciphertext has been locked away with a public key. Your task is to decrypt it and reveal the flag!</p>
+  <p><strong>Scenario:</strong> After cracking the previous levels, you've discovered a hidden flag stored in an encrypted message using RSA encryption. The ciphertext has been locked away with a public key. Your task is to decrypt it and reveal the flag!</p>
 
   <p><strong>RSA Public Key:</strong></p>
   <code>N = 3233, e = 17</code>
@@ -147,6 +147,11 @@
     <button id="submitBtn3">Submit</button>
     <div class="message" id="message3"></div>
   </div>
+</div>
+
+<div class="container" id="completion">
+  <h1>🏆 Congratulations!</h1>
+  <p>You solved all the levels and found the flag! 🎉</p>
 </div>
   
 <script>
@@ -202,7 +207,6 @@
       messageDiv.textContent = "✅ Correct! You solved Level 2!";
       messageDiv.style.color = "#4caf50";
 
-      // Transition to Level 3
       setTimeout(() => {
         document.getElementById("level2").classList.remove("show");
         document.getElementById("level2").style.display = "none";
@@ -218,37 +222,44 @@
   });
 
   // Handle Level 3 Submission
-document.getElementById("submitBtn3").addEventListener("click", async function (e) {
-  e.preventDefault();
+  document.getElementById("submitBtn3").addEventListener("click", async function (e) {
+    e.preventDefault();
 
-  // Get the user's flag submission and trim any whitespace
-  const flag = document.getElementById("flagInput3").value.trim();
-  
-  // Make sure it follows the required format
-  if (!flag.startsWith("flag{") || !flag.endsWith("}")) {
+    const flag = document.getElementById("flagInput3").value.trim();
+    
+    if (!flag.startsWith("flag{") || !flag.endsWith("}")) {
+      const messageDiv = document.getElementById("message3");
+      messageDiv.textContent = "❌ Remember to use the flag{...} format!";
+      messageDiv.style.color = "#f44336";
+      return;
+    }
+
+    const response = await fetch("/.netlify/functions/checkFlag", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ flag, level: "3" })
+    });
+
+    const result = await response.json();
     const messageDiv = document.getElementById("message3");
-    messageDiv.textContent = "❌ Remember to use the flag{...} format!";
-    messageDiv.style.color = "#f44336";
-    return;
-  }
 
-  const response = await fetch("/.netlify/functions/checkFlag", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ flag, level: "3" })
+    if (result.correct) {
+      messageDiv.textContent = "✅ Flag found! Congratulations, you've completed the RSA challenge!";
+      messageDiv.style.color = "#4caf50";
+      
+      setTimeout(() => {
+        document.getElementById("level3").classList.remove("show");
+        document.getElementById("level3").style.display = "none";
+
+        const completion = document.getElementById("completion");
+        completion.classList.add("show");
+        completion.style.display = "block";
+      }, 2000);
+    } else {
+      messageDiv.textContent = "❌ Incorrect flag. Double-check your RSA decryption.";
+      messageDiv.style.color = "#f44336";
+    }
   });
-
-  const result = await response.json();
-  const messageDiv = document.getElementById("message3");
-
-  if (result.correct) {
-    messageDiv.textContent = "✅ Flag found! Congratulations, you've completed the RSA challenge!";
-    messageDiv.style.color = "#4caf50";
-  } else {
-    messageDiv.textContent = "❌ Incorrect flag. Double-check your RSA decryption.";
-    messageDiv.style.color = "#f44336";
-  }
-});
 
   function showHint(id) {
     const hint = document.getElementById(id);
@@ -257,11 +268,10 @@ document.getElementById("submitBtn3").addEventListener("click", async function (
 
   function downloadCiphertext() {
     const link = document.createElement('a');
-    link.href = '/ciphertext.txt';  // Update the path to where your file is stored
-    link.download = 'ciphertext.txt';  // The name that will appear when the file is downloaded
+    link.href = '/ciphertext.txt';  
+    link.download = 'ciphertext.txt';  
     link.click();
   }
-
 </script>
 
 </body>
