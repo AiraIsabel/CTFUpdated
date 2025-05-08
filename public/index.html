@@ -218,28 +218,37 @@
   });
 
   // Handle Level 3 Submission
-  document.getElementById("submitBtn3").addEventListener("click", async function (e) {
-    e.preventDefault();
+document.getElementById("submitBtn3").addEventListener("click", async function (e) {
+  e.preventDefault();
 
-    const flag = document.getElementById("flagInput3").value;
-
-    const response = await fetch("/.netlify/functions/checkFlag", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ flag, level: "3" })
-    });
-
-    const result = await response.json();
+  // Get the user's flag submission and trim any whitespace
+  const flag = document.getElementById("flagInput3").value.trim();
+  
+  // Make sure it follows the required format
+  if (!flag.startsWith("flag{") || !flag.endsWith("}")) {
     const messageDiv = document.getElementById("message3");
+    messageDiv.textContent = "❌ Remember to use the flag{...} format!";
+    messageDiv.style.color = "#f44336";
+    return;
+  }
 
-    if (result.correct) {
-      messageDiv.textContent = "✅ Flag found! Congratulations, you've completed the challenge!";
-      messageDiv.style.color = "#4caf50";
-    } else {
-      messageDiv.textContent = "❌ Incorrect flag. Try again.";
-      messageDiv.style.color = "#f44336";
-    }
+  const response = await fetch("/.netlify/functions/checkFlag", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ flag, level: "3" })
   });
+
+  const result = await response.json();
+  const messageDiv = document.getElementById("message3");
+
+  if (result.correct) {
+    messageDiv.textContent = "✅ Flag found! Congratulations, you've completed the RSA challenge!";
+    messageDiv.style.color = "#4caf50";
+  } else {
+    messageDiv.textContent = "❌ Incorrect flag. Double-check your RSA decryption.";
+    messageDiv.style.color = "#f44336";
+  }
+});
 
   function showHint(id) {
     const hint = document.getElementById(id);
