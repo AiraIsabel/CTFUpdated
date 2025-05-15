@@ -90,25 +90,37 @@
   </style>
 </head>
 <body>
- <!-- Level 2 -->
-<div class="container" id="level2">
-  <h1>🔒 Crypto CTF - Level 2</h1>
-  <p><strong>Scenario:</strong> After decrypting the vault's hash, you find a second encoded message with a label: <code>base64::b3JpZ2luYWxCYXNlNjRTdHJpbmc=</code>. But it's not so simple—there's a trick to it.</p>
+ <!-- Level 3 -->
+<div class="container" id="level3">
+  <h1>🔒 Crypto CTF - Level 3</h1>
+  <p><strong>Scenario:</strong> After cracking the previous levels, you've discovered a hidden flag stored in an encrypted message using RSA encryption. The ciphertext has been locked away with a public key. Your task is to decrypt it and reveal the flag!</p>
 
-  <p>🔐 <strong>Encrypted String:</strong></p>
-  <code>YmFzZTY0OjpiM0pwWjJsdUxtTnZiUzkzYjJjdVkyOXRJQT09</code>
+  <p><strong>RSA Public Key:</strong></p>
+  <code>n = 391, e = 3</code>
+  
+  <p><strong>Decryption Formula:</strong></p>
+  <p><code>m = c^d mod n</code></p>
 
   <div class="hints">
-    <button onclick="showHint('hint2-1')">Show Hint 1</button>
-    <p id="hint2-1" style="display: none;">🧠 Hint 1: Remove the <code>base64::</code> prefix from the decoded string before the second decode.</p><br>
-    <button onclick="showHint('hint2-2')">Show Hint 2</button>
-    <p id="hint2-2" style="display: none;">🧠 Hint 2: You'll need to decode twice using base64.</p><br>
+    <button onclick="showHint('hint3-1')">Show Hint 1</button>
+    <p id="hint3-1" style="display: none;">🧠 Hint 1: Factor <code>n = 391</code> to find two prime numbers.</p><br>
+    <button onclick="showHint('hint3-2')">Show Hint 2</button>
+    <p id="hint3-2" style="display: none;">🧠 Hint 2: Calculate <code>φ(n) = (p - 1) * (q - 1)</code>.</p><br>
+    <button onclick="showHint('hint3-3')">Show Hint 3</button>
+    <p id="hint3-3" style="display: none;">🧠 Hint 3: Use modular inverse to find <code>d</code>.</p><br>
+    <button onclick="showHint('hint3-4')">Show Hint 4</button>
+    <p id="hint3-4" style="display: none;">🧠 Hint 4: Once decrypted, convert the numbers to ASCII to get the flag.</p>
   </div>
 
- <div class="navigation">
-    <a href="level1.html"><button>Back</button></a>
-    <a href="level3.html"><button>Next Level</button></a>
+  <div>
+    <a href="/ciphertext.txt" download class="download-link">Download Ciphertext</a>
   </div>
+
+  <div class="navigation">
+    <a href="level2.html"><button>Back</button></a>
+  </div>
+</div>
+
   
   <script>
   function showHint(id) {
