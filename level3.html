@@ -26,7 +26,6 @@
       transition: all 0.5s ease;
       opacity: 0;
       transform: scale(0.95);
-      display: none;
     }
     .show {
       display: block;
@@ -91,7 +90,7 @@
 </head>
 <body>
  <!-- Level 3 -->
-<div class="container" id="level3">
+<div class="container show">
   <h1>🔒 Crypto CTF - Level 3</h1>
   <p><strong>Scenario:</strong> After cracking the previous levels, you've discovered a hidden flag stored in an encrypted message using RSA encryption. The ciphertext has been locked away with a public key. Your task is to decrypt it and reveal the flag!</p>
 
@@ -102,14 +101,10 @@
   <p><code>m = c^d mod n</code></p>
 
   <div class="hints">
-    <button onclick="showHint('hint3-1')">Show Hint 1</button>
-    <p id="hint3-1" style="display: none;">🧠 Hint 1: Factor <code>n = 391</code> to find two prime numbers.</p><br>
-    <button onclick="showHint('hint3-2')">Show Hint 2</button>
-    <p id="hint3-2" style="display: none;">🧠 Hint 2: Calculate <code>φ(n) = (p - 1) * (q - 1)</code>.</p><br>
-    <button onclick="showHint('hint3-3')">Show Hint 3</button>
-    <p id="hint3-3" style="display: none;">🧠 Hint 3: Use modular inverse to find <code>d</code>.</p><br>
-    <button onclick="showHint('hint3-4')">Show Hint 4</button>
-    <p id="hint3-4" style="display: none;">🧠 Hint 4: Once decrypted, convert the numbers to ASCII to get the flag.</p>
+    <p>🧠 Hint 1: Factor <code>n = 391</code> to find two prime numbers.</p>
+    <p>🧠 Hint 2: Calculate <code>φ(n) = (p - 1) * (q - 1)</code>.</p>
+    <p>🧠 Hint 3: Use modular inverse to find <code>d</code>.</p>
+    <p>🧠 Hint 4: Once decrypted, convert the numbers to ASCII to get the flag.</p>
   </div>
 
   <div>
@@ -121,13 +116,6 @@
   </div>
 </div>
 
-  
-  <script>
-  function showHint(id) {
-    const hint = document.getElementById(id);
-    if (hint) hint.style.display = 'block';
-  }
- </script>
 
 </body>
 </html>
