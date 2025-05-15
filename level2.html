@@ -90,21 +90,19 @@
   </style>
 </head>
 <body>
-  <!-- Level 1 -->
+  <!-- Level 2 -->
 <div class="container show">
   <h1>🔒 Crypto CTF - Level 2</h1>
-  <p><strong>Scenario:</strong> A hacker has encrypted a password used to unlock a digital vault using SHA-256 with a salt. Your mission is to reverse-engineer what the original password was, given only the final hash.</p>
+  <p><strong>Scenario:</strong> After decrypting the vault's hash, you find a second encoded message with a label: <code>base64::b3JpZ2luYWxCYXNlNjRTdHJpbmc=</code>. But it's not so simple—there's a trick to it.</p>
 
-  <p>🔐 <strong>Target SHA-256 hash:</strong></p>
-  <code>ec4fbc87fabefbf59cc72492b0f273e7889e7c137fc5e3c406ae27515845ddc5</code>
+  <p>🔐 <strong>Encrypted String:</strong></p>
+  <code>YmFzZTY0OjpiM0pwWjJsdUxtTnZiUzkzYjJjdVkyOXRJQT09</code>
 
   <div class="hints">
-    <p>🧂 Salt used: <code>salt123</code></p>
-    <p>🧠 Hint 1: The password is a common food item followed by random numbers.</p>
-    <p>🧠 Hint 2: Concatenate the password and salt before hashing (e.g. password + salt).</p>
-    <p>🛠 Hint 3: You can verify your result using CyberChef, a terminal command, or Google Colab.</p>
+    <p id="hint2-1" style="display: none;">🧠 Hint 1: Remove the <code>base64::</code> prefix from the decoded string before the second decode.</p>
+    <p id="hint2-2" style="display: none;">🧠 Hint 2: You'll need to decode twice using base64.</p>
   </div>
-
+  
   <div class="navigation">
     <a href="index.html"><button>Back</button></a>
     <a href="level3.html"><button>Next Level</button></a>
