@@ -26,7 +26,7 @@
       transition: all 0.5s ease;
       opacity: 0;
       transform: scale(0.95);
-      display: none;
+      
     }
     .show {
       display: block;
@@ -91,8 +91,8 @@
 </head>
 <body>
   <!-- Level 1 -->
-<div>
-  <h1>🔒 Crypto CTF - Level 1</h1>
+<div class="container show">
+  <h1>🔒 Crypto CTF - Level 2</h1>
   <p><strong>Scenario:</strong> A hacker has encrypted a password used to unlock a digital vault using SHA-256 with a salt. Your mission is to reverse-engineer what the original password was, given only the final hash.</p>
 
   <p>🔐 <strong>Target SHA-256 hash:</strong></p>
@@ -101,11 +101,11 @@
   <div class="hints">
     <p>🧂 Salt used: <code>salt123</code></p>
     <button onclick="showHint('hint1-1')">Show Hint 1</button>
-    <p id="hint1-1" style="display: none;">🧠 Hint 1: The password is a common food item followed by random numbers.</p><br>
+    <p>🧠 Hint 1: The password is a common food item followed by random numbers.</p>
     <button onclick="showHint('hint1-2')">Show Hint 2</button>
-    <p id="hint1-2" style="display: none;">🧠 Hint 2: Concatenate the password and salt before hashing (e.g. password + salt).</p><br>
+    <p>🧠 Hint 2: Concatenate the password and salt before hashing (e.g. password + salt).</p>
     <button onclick="showHint('hint1-3')">Show Hint 3</button>
-    <p id="hint1-3" style="display: none;">🛠 Hint 3: You can verify your result using CyberChef, a terminal command, or Google Colab.</p>
+    <p>🛠 Hint 3: You can verify your result using CyberChef, a terminal command, or Google Colab.</p>
   </div>
 
   <div class="navigation">
@@ -113,12 +113,6 @@
     <a href="level3.html"><button>Next Level</button></a>
   </div>
 
-  <script>
-  function showHint(id) {
-    const hint = document.getElementById(id);
-    if (hint) hint.style.display = 'block';
-  }
- </script>
 
 </body>
 </html>
