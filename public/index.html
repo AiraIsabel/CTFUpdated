@@ -177,7 +177,7 @@
   </div>
 
   <div>
-    <button onclick="downloadCiphertext()">Download Ciphertext</button>
+    <a href="/ciphertext.txt" download>Download Ciphertext</a>
   </div>
 
   <div id="flagForm3">
@@ -316,16 +316,7 @@
   }
 
   // Function to download ciphertext for Level 3
-  function downloadCiphertext() {
-    const ciphertext = "ciphertext_here"; // Put your encrypted message or file content here
-    const blob = new Blob([ciphertext], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "ciphertext.txt";
-    a.click();
-    URL.revokeObjectURL(url);
-  }
+  
 </script>
 
 </body>
