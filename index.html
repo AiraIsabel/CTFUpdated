@@ -26,7 +26,6 @@
       transition: all 0.5s ease;
       opacity: 0;
       transform: scale(0.95);
-      display: none;
     }
     .show {
       display: block;
@@ -91,7 +90,7 @@
 </head>
 <body>
   <!-- Level 1 -->
-<div>
+<div class="container show">
   <h1>🔒 Crypto CTF - Level 1</h1>
   <p><strong>Scenario:</strong> A hacker has encrypted a password used to unlock a digital vault using SHA-256 with a salt. Your mission is to reverse-engineer what the original password was, given only the final hash.</p>
 
